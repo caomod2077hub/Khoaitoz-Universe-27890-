@@ -1,0 +1,109 @@
+--======================================================================================--
+--    CHIM HUB | KHOANG LANG HUB MỌI CHỨC NĂNG TÍCH HỢP IY 🍠 - 7-PAGE                  --
+--======================================================================================--
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local localPlayer = Players.LocalPlayer
+
+-- Cleanup cũ
+if CoreGui:FindFirstChild("KhoangLang_MultiPageMenu") then CoreGui["KhoangLang_MultiPageMenu"]:Destroy() end
+
+local ChillSound = Instance.new("Sound")
+ChillSound.Name = "KhoangLang_ChillSound"; ChillSound.Volume = 2; ChillSound.Looped = true; ChillSound.Parent = localPlayer:WaitForChild("PlayerGui")
+
+local function create(instanceType, parent, properties)
+    local obj = Instance.new(instanceType)
+    for k, v in pairs(properties) do obj[k] = v end
+    obj.Parent = parent
+    return obj
+end
+
+local function addCornerAndStroke(obj, radius, strokeThick)
+    Instance.new("UICorner", obj).CornerRadius = UDim.new(0, radius)
+    if strokeThick then local str = Instance.new("UIStroke", obj); str.Thickness = strokeThick; return str end
+end
+
+local ScreenGui = create("ScreenGui", CoreGui, {Name = "KhoangLang_MultiPageMenu", ResetOnSpawn = false, IgnoreGuiInset = true})
+local MainFrame = create("Frame", ScreenGui, {Name = "MainFrame", Size = UDim2.new(0, 160, 0, 120), Position = UDim2.new(0.5, -80, 0.4, -60), BackgroundColor3 = Color3.fromRGB(22, 22, 28), BorderSizePixel = 0, Active = true, ClipsDescendants = true, Draggable = true})
+local UIStroke = addCornerAndStroke(MainFrame, 10, 1.8)
+
+local Title = create("TextLabel", MainFrame, {Size = UDim2.new(1, 0, 0.25, 0), BackgroundTransparency = 1, Font = Enum.Font.SourceSansBold, Text = "KHOANG LANG HUB 🍠", TextColor3 = Color3.fromRGB(255, 165, 0), TextSize = 11})
+local MinimizeButton = create("TextButton", MainFrame, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(1, -25, 0, 4), BackgroundTransparency = 1, Font = Enum.Font.SourceSansBold, Text = "-", TextColor3 = Color3.fromRGB(255, 60, 60), TextSize = 20})
+local LogoButton = create("TextButton", ScreenGui, {Size = UDim2.new(0, 36, 0, 36), Position = UDim2.new(0, 10, 0.3, 0), BackgroundColor3 = Color3.fromRGB(15, 15, 20), Font = Enum.Font.SourceSansBold, Text = "🍠", TextSize = 20, Visible = false, Active = true, Draggable = true})
+local LogoStroke = addCornerAndStroke(LogoButton, 18, 1.5)
+
+-- Tạo 7 trang
+local pages = {}
+for i = 1, 7 do pages[i] = create("Frame", MainFrame, {Name = "Page"..i, Size = UDim2.new(1, 0, 0.75, 0), Position = UDim2.new(i == 1 and 0 or 1, 0, 0.25, 0), BackgroundTransparency = 1}) end
+
+-- Nội dung các trang 1-6 giữ nguyên
+local SpinButton = create("TextButton", pages[1], {Size = UDim2.new(0.85, 0, 0.35, 0), Position = UDim2.new(0.075, 0, 0.15, 0), BackgroundColor3 = Color3.fromRGB(255, 105, 180), Font = Enum.Font.SourceSansBold, Text = "Spin Me!", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 12}); addCornerAndStroke(SpinButton, 5)
+local N1 = create("TextButton", pages[1], {Size = UDim2.new(0.85, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.72, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "Next Page >", TextColor3 = Color3.fromRGB(200, 200, 200), TextSize = 11}); addCornerAndStroke(N1, 4)
+
+local SpeedInput = create("TextBox", pages[2], {Size = UDim2.new(0.85, 0, 0.24, 0), Position = UDim2.new(0.075, 0, 0.18, 0), BackgroundColor3 = Color3.fromRGB(35, 35, 45), Font = Enum.Font.SourceSansBold, PlaceholderText = "Nhập Speed...", Text = "", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 11}); addCornerAndStroke(SpeedInput, 5)
+local ApplySpeedButton = create("TextButton", pages[2], {Size = UDim2.new(0.85, 0, 0.24, 0), Position = UDim2.new(0.075, 0, 0.45, 0), Font = Enum.Font.SourceSansBold, Text = "Apply Speed", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 11}); addCornerAndStroke(ApplySpeedButton, 5)
+local B1 = create("TextButton", pages[2], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "< Back", TextSize = 11}); addCornerAndStroke(B1, 4)
+local N2 = create("TextButton", pages[2], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.525, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "Next >", TextSize = 11}); addCornerAndStroke(N2, 4)
+
+local MusicInput = create("TextBox", pages[3], {Size = UDim2.new(0.85, 0, 0.26, 0), Position = UDim2.new(0.075, 0, 0.05, 0), BackgroundColor3 = Color3.fromRGB(35, 35, 45), Font = Enum.Font.SourceSansBold, PlaceholderText = "ID Nhạc...", Text = "", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 12}); addCornerAndStroke(MusicInput, 5)
+local PlayMusicButton = create("TextButton", pages[3], {Size = UDim2.new(0.85, 0, 0.26, 0), Position = UDim2.new(0.075, 0, 0.38, 0), BackgroundColor3 = Color3.fromRGB(25, 25, 30), Font = Enum.Font.SourceSansBold, Text = "▶️", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 14}); local PlayMusicStroke = addCornerAndStroke(PlayMusicButton, 5, 1.5)
+local B2 = create("TextButton", pages[3], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.72, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "< Back", TextSize = 11}); addCornerAndStroke(B2, 4)
+local N3 = create("TextButton", pages[3], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.525, 0, 0.72, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "Next >", TextSize = 11}); addCornerAndStroke(N3, 4)
+
+local SaveLocButton = create("TextButton", pages[4], {Size = UDim2.new(0.85, 0, 0.26, 0), Position = UDim2.new(0.075, 0, 0.05, 0), BackgroundColor3 = Color3.fromRGB(255, 140, 0), Font = Enum.Font.SourceSansBold, Text = "Save Location", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 11}); addCornerAndStroke(SaveLocButton, 5)
+local TeleportButton = create("TextButton", pages[4], {Size = UDim2.new(0.85, 0, 0.26, 0), Position = UDim2.new(0.075, 0, 0.38, 0), BackgroundColor3 = Color3.fromRGB(30, 144, 255), Font = Enum.Font.SourceSansBold, Text = "Teleport", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 12}); addCornerAndStroke(TeleportButton, 5)
+local B3 = create("TextButton", pages[4], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.72, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "< Back", TextSize = 11}); addCornerAndStroke(B3, 4)
+local N4 = create("TextButton", pages[4], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.525, 0, 0.72, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "Next >", TextSize = 11}); addCornerAndStroke(N4, 4)
+
+local JumpInput = create("TextBox", pages[5], {Size = UDim2.new(0.85, 0, 0.24, 0), Position = UDim2.new(0.075, 0, 0.18, 0), BackgroundColor3 = Color3.fromRGB(35, 35, 45), Font = Enum.Font.SourceSansBold, PlaceholderText = "Nhập Jump...", Text = "", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 11}); addCornerAndStroke(JumpInput, 5)
+local ApplyJumpButton = create("TextButton", pages[5], {Size = UDim2.new(0.85, 0, 0.24, 0), Position = UDim2.new(0.075, 0, 0.45, 0), Font = Enum.Font.SourceSansBold, Text = "Apply Jump", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 11}); addCornerAndStroke(ApplyJumpButton, 5)
+local B4 = create("TextButton", pages[5], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "< Back", TextSize = 11}); addCornerAndStroke(B4, 4)
+local N5 = create("TextButton", pages[5], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.525, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "Next >", TextSize = 11}); addCornerAndStroke(N5, 4)
+
+local LoadIYButton = create("TextButton", pages[6], {Size = UDim2.new(0.85, 0, 0.35, 0), Position = UDim2.new(0.075, 0, 0.3), BackgroundColor3 = Color3.fromRGB(30, 30, 40), Font = Enum.Font.SourceSansBold, Text = "Load IY", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 12}); local IYStroke = addCornerAndStroke(LoadIYButton, 6, 1.5)
+local B6 = create("TextButton", pages[6], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "< Back", TextSize = 11}); addCornerAndStroke(B6, 4)
+local N6 = create("TextButton", pages[6], {Size = UDim2.new(0.4, 0, 0.2, 0), Position = UDim2.new(0.525, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "Next >", TextSize = 11}); addCornerAndStroke(N6, 4)
+
+-- Page 7 mới
+local LabelPage7 = create("TextLabel", pages[7], {Size = UDim2.new(1, 0, 0.5, 0), Position = UDim2.new(0, 0, 0.25, 0), BackgroundTransparency = 1, Font = Enum.Font.SourceSansBold, Text = "An unexpected error has occurred🙁", TextColor3 = Color3.fromRGB(255, 255, 255), TextSize = 14})
+local B7 = create("TextButton", pages[7], {Size = UDim2.new(0.85, 0, 0.2, 0), Position = UDim2.new(0.075, 0, 0.74, 0), BackgroundColor3 = Color3.fromRGB(45, 45, 55), Font = Enum.Font.SourceSansBold, Text = "< Back Page", TextSize = 11}); addCornerAndStroke(B7, 4)
+
+-- Logic Variables
+getgenv().KhoangLang_SavedPos = nil
+_G.Spinning = false
+
+-- Animations & Nav
+task.spawn(function()
+    local h = 0
+    while task.wait(0.01) do
+        h = h + 0.005 if h > 1 then h = 0 end
+        local c = Color3.fromHSV(h, 0.8, 0.8)
+        ApplySpeedButton.BackgroundColor3 = c; ApplyJumpButton.BackgroundColor3 = c; PlayMusicStroke.Color = c; UIStroke.Color = c; LogoStroke.Color = c; IYStroke.Color = c
+    end
+end)
+
+local tInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local function nav(pOut, pIn, dir) TweenService:Create(pOut, tInfo, {Position = UDim2.new(dir, 0, 0.25, 0)}):Play(); TweenService:Create(pIn, tInfo, {Position = UDim2.new(0, 0, 0.25, 0)}):Play() end
+
+-- Kết nối nav cho 7 trang
+N1.MouseButton1Click:Connect(function() nav(pages[1], pages[2], -1) end); B1.MouseButton1Click:Connect(function() nav(pages[2], pages[1], 1) end)
+N2.MouseButton1Click:Connect(function() nav(pages[2], pages[3], -1) end); B2.MouseButton1Click:Connect(function() nav(pages[3], pages[2], 1) end)
+N3.MouseButton1Click:Connect(function() nav(pages[3], pages[4], -1) end); B3.MouseButton1Click:Connect(function() nav(pages[4], pages[3], 1) end)
+N4.MouseButton1Click:Connect(function() nav(pages[4], pages[5], -1) end); B4.MouseButton1Click:Connect(function() nav(pages[5], pages[4], 1) end)
+N5.MouseButton1Click:Connect(function() nav(pages[5], pages[6], -1) end); B6.MouseButton1Click:Connect(function() nav(pages[6], pages[5], 1) end)
+N6.MouseButton1Click:Connect(function() nav(pages[6], pages[7], -1) end); B7.MouseButton1Click:Connect(function() nav(pages[7], pages[6], 1) end)
+
+MinimizeButton.MouseButton1Click:Connect(function() MainFrame.Visible = false; LogoButton.Visible = true end)
+LogoButton.MouseButton1Click:Connect(function() MainFrame.Visible = true; LogoButton.Visible = false end)
+
+-- Feature Logic
+SaveLocButton.MouseButton1Click:Connect(function() local hrp = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") if hrp then getgenv().KhoangLang_SavedPos = hrp.CFrame; SaveLocButton.Text = "Đã Lưu!"; task.wait(1.5); SaveLocButton.Text = "Save Location" end end)
+TeleportButton.MouseButton1Click:Connect(function() local hrp = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") if getgenv().KhoangLang_SavedPos and hrp then hrp.CFrame = getgenv().KhoangLang_SavedPos; TeleportButton.Text = "Đã Tele!"; task.wait(1.5); TeleportButton.Text = "Teleport" end end)
+SpinButton.MouseButton1Click:Connect(function() _G.Spinning = not _G.Spinning; SpinButton.Text = _G.Spinning and "Spinning..." or "Spin Me!" end)
+RunService.RenderStepped:Connect(function() if _G.Spinning then local hrp = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") if hrp then hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(15), 0) end end end)
+ApplySpeedButton.MouseButton1Click:Connect(function() local n = tonumber(SpeedInput.Text) if n and localPlayer.Character:FindFirstChild("Humanoid") then localPlayer.Character.Humanoid.WalkSpeed = n; ApplySpeedButton.Text = "Done!"; task.wait(1.5); ApplySpeedButton.Text = "Apply Speed" end end)
+ApplyJumpButton.MouseButton1Click:Connect(function() local n = tonumber(JumpInput.Text) local h = localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") if n and h then h.UseJumpPower = true; h.JumpPower = n; ApplyJumpButton.Text = "Done!"; task.wait(1.5); ApplyJumpButton.Text = "Apply Jump" end end)
+PlayMusicButton.MouseButton1Click:Connect(function() local id = MusicInput.Text:match("%d+") if id then ChillSound.SoundId = "rbxassetid://" .. id; if ChillSound.IsPlaying then ChillSound:Stop(); PlayMusicButton.Text = "▶️" else ChillSound:Play(); PlayMusicButton.Text = "⏸️" end end end)
+LoadIYButton.MouseButton1Click:Connect(function() LoadIYButton.Text = "Loading..."; pcall(function() loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))() end); LoadIYButton.Text = "Loaded ✔️" end)
